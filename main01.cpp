@@ -29,7 +29,7 @@ int main() {
     cout << "Pointer address: " << &p_number << endl;
     display_variable_information("p_number", p_number);
     display_variable_information("address to number", &number);
-    display_variable_information("dereferenced pointer", *p_number);
+    display_variable_information("dereference pointer", *p_number);
     return 0;
 }
 
