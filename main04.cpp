@@ -12,34 +12,38 @@ using namespace std;
 
 using NumberList = vector<int>;
 
-void fillVector(shared_ptr<NumberList> list);
-void displayNumbers(const shared_ptr<NumberList> list);
+void fillVector(NumberList &list, const function<int (void)>& rng);
+void displayNumbers(unique_ptr<NumberList> list);
 
 int main() {
-    // create random number generator
-    default_random_engine generator {random_device{}()};
-    uniform_int_distribution<int> distribution(1, 100);
-    auto get_random_number = bind(distribution, generator);
+  // create random number generator
+  default_random_engine generator{random_device{}()};
+  uniform_int_distribution<int> distribution(1, 100);
+  auto getRandomNumber = [&]() {return distribution(generator);};
 
-    // create two vectors, one of size 5, another of size 10
-    NumberList small {5};
-    NumberList large {10};
+  // create two vectors, one of size 5, another of size 10
+  NumberList small(5);
+  NumberList large(10);
 
-    // fill the vectors
-    fillVector(make_shared<NumberList>(small), bind(distribution, generator));
+  // fill the vectors
+  fillVector(small, getRandomNumber);
+  fillVector(large, getRandomNumber);
 
-
-    // display the vectors
-
-    return 0;
+  // display the vectors
+  displayNumbers(make_unique<NumberList>(small));
+  displayNumbers(make_unique<NumberList>(large));
+  return 0;
 }
 
-void fillVector(shared_ptr<NumberList> list);
+void fillVector(NumberList &list, const function<int (void)>& rng) {
+  for (auto & number : list) {
+    number = rng();
+  }
+}
 
-void displayNumbers(const shared_ptr<NumberList> list) {
-    for (auto number : *list) {
-        cout << number << " ";
-    }
-
-    cout << endl;
+void displayNumbers(unique_ptr<NumberList> list) {
+  for (auto number : *list) {
+    cout << number << " ";
+  }
+  cout << endl;
 }
